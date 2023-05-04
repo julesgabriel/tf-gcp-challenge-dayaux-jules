@@ -38,11 +38,13 @@ resource "google_bigquery_dataset" "my_dataset" {
   default_table_expiration_ms = "3600000"
 }
 
-resource "google_bigquery_table" "test_table" {
+module "bigquery_table" {
+  source    = "./google_bigquery_table"
   dataset_id = "mydataset"
   table_id   = "my_table"
+  depends_on = [google_bigquery_dataset.my_dataset]
 
-  schema = jsonencode([
+  schema = [
     {
       name = "name"
       type = "STRING"
@@ -51,8 +53,9 @@ resource "google_bigquery_table" "test_table" {
       name = "amount"
       type = "INTEGER"
     }
-  ])
+  ]
 }
+
 
 
 
