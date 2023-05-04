@@ -9,10 +9,11 @@ resource "google_storage_bucket" "function_sources_bucket" {
   location = var.region
 }
 
-resource "google_storage_bucket_object" "function_sources_zip" {
-  name   = "${var.function}.zip"
-  bucket = google_storage_bucket.function_sources_bucket.name
-  source = "${path.module}/${var.function}.zip"
+module "function_sources_zip" {
+  source = "./google_storage_bucket_object"
+  object_name   = "${var.function}.zip"
+  bucket_name = google_storage_bucket.function_sources_bucket.name
+  object_source = "${path.module}/${var.function}.zip"
 }
 
 resource "google_cloudfunctions_function" "julesiimFunction" {
@@ -26,7 +27,7 @@ resource "google_cloudfunctions_function" "julesiimFunction" {
   available_memory_mb = 256
   timeout             = 10
   entry_point         = "helloGCS"
-  depends_on = [google_storage_bucket_object.function_sources_zip]
+  depends_on = [module.function_sources_zip]
 }
 
 resource "google_bigquery_dataset" "my_dataset" {
