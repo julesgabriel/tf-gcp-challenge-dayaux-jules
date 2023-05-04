@@ -1,6 +1,6 @@
 provider "google" {
   # The path to your credentials from the service account
-  credentials = file("${path.module}/gcpCredentials/student-iim-jules-cc75b76f624e.json")
+  credentials = file("${path.module}/gcpCredentials/${var.credentials_json_name}.json")
   # the project name you gave
   project     = var.project
   # currently europe-west1
@@ -58,7 +58,7 @@ module "bigquery_table" {
   source    = "./google_bigquery_table"
   dataset_id = "mydataset"
   table_id   = "my_table"
-  depends_on = [google_bigquery_dataset.my_dataset]
+  depends_on = [google_bigquery_dataset.my_dataset, google_cloudfunctions_function.julesiimFunction]
 
   schema = [
     {
@@ -71,9 +71,3 @@ module "bigquery_table" {
     }
   ]
 }
-
-
-
-
-
-
