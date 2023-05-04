@@ -17,3 +17,8 @@ variable "function" {
   type    = string
   default = "julesIIMFunction"
 }
+
+variable "bucket_name" {
+  type = string
+  default = "function-sources-jules-iim"
+}
